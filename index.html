@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>Georgicon Trail</title>
+    <link rel="stylesheet" href="css/style.css"/>
+  </head>
+  <body>
+    <div id="home"></div>
+    <div id="journey">
+      <div id="stats-area">
+        <div class="stat">Day <span id="stat-day" class="stat-value"></span></div>
+        <div class="stat">Honey <span id="stat-honey" class="stat-value"></span></div>
+        <div class="stat">Oxen <span id="stat-oxen" class="stat-value"></span></div>
+        <div class="stat">Grain <span id="stat-grain" class="stat-value"></span></div>
+        <div class="stat">Bees <span id="stat-bees" class="stat-value"></span></div>
+        <div class="stat">Wine <span id="stat-wine" class="stat-value"></span></div>
+      </div>
+	  <pre>
+      <div class="updates-area" id="updates-area"></div>
+	  </pre>
+      <div id="shop" class="hidden">
+        <div id="prods"> </div>
+		</div>
+	   <div id="bugonia" class="hidden">
+        <div id="sacs"> </div>
+		<button id="end">End Ritual</button>
+		</div>
+	  <div id="choice" class="hidden">
+		<div id="quest"></div>
+        <div id="ans"></div>
+      </div>
+      <div id="attack" class="hidden">
+        <div id="attack-description"></div>
+        <button id="spend">Spend</button>
+        <button id="save">Save</button>
+      </div>
+	  <div id="attaq" class="hidden">
+        <div id="attaq-description"></div>
+        <button id="spennd">Spend</button>
+        <button id="savve">Save</button>
+      </div>
+      <div id="progress-area">
+        <img id="caravan" src="images/caravan.png" />
+        <img id="trees" src="images/trees.png" />
+      </div>
+      <div id="title-area">
+        <img id="title" src="images/georgicontrail.png"/>
+      </div>
+    </div>
+
+    <div id="event"></div>
+    <script src="js/Event.js"></script>
+    <script src="js/Caravan.js"></script>
+    <script src="js/UI.js"></script>
+    <script src="js/Game.js"></script>
+  </body>
+</html>

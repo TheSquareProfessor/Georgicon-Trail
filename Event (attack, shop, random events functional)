@@ -1,0 +1,204 @@
+var OregonH = OregonH || {};
+
+OregonH.Event = {};
+
+OregonH.Event.eventTypes = [
+  {
+    type: 'ATTACK',
+    notification: 'negative',
+    text: 'Si vero, quoniam casus apibus quoque nostros vita tulit, tristi languebunt corpora morbo—quod iam non dubiis poteris cognoscere signis:'
+  },
+  {
+    type: 'ATTACK',
+    notification: 'negative',
+    text: 'Si vero, quoniam casus apibus quoque nostros vita tulit, tristi languebunt corpora morbo—quod iam non dubiis poteris cognoscere signis:'
+  },
+{
+    type: 'SHOP',
+    notification: 'neutral',
+    text: 'Identify an accusative: non ego cuncta meis amplecti uersibus opto, non, mihi si linguae centum sint oraque centum, ferrea uox.',
+    products: [
+      {item: 'centum', qty: 0, price: 1},
+      {item: 'ferrea', qty: 0, price: 1},
+      {item: 'cuncta', qty: 10, price: 1},
+      {item: 'ora', qty: 0, price: 1}
+    ]
+  },
+  {
+    type: 'SHOP',
+    notification: 'neutral',
+    text: 'Of what verb is tauri the subject? haec loca non tauri spirantes naribus ignem inuertere satis immanis dentibus hydri, nec galeis densisque uirum seges horruit hastis;',
+    products: [
+      {item: 'invertere', qty: 5, price: 1},
+      {item: 'horruit', qty: 0, price: 1},
+      {item: 'hydri', qty: -3, price: 1},
+      {item: 'immanis', qty: -3, price: 1}
+    ]
+  },
+  {
+    type: 'SHOP',
+    notification: 'neutral',
+    text: 'Identify a nominative: Neue tibi ad solem uergant uineta cadentem, neue inter uitis corylum sere, neue flagella summa pete aut summa defringe ex arbore plantas',
+    products: [
+      {item: 'flagella', qty: 0, price: 1},
+      {item: 'corylum', qty: 0, price: 1},
+      {item: 'vineta', qty: 10, price: 1},
+      {item: 'vitis', qty: 0, price: 1}
+    ]
+  },
+  {
+    type: 'STAT-CHANGE',
+    notification: 'negative',
+    stat: 'grain',
+	blar: 'gar',
+    value: -10,
+    text: 'tum uariae inludant pestes: saepe exiguus mus sub terris posuitque domos atque horrea fecit, aut oculis capti fodere cubilia talpae, inuentusque cauis bufo et quae plurima terrae monstra ferunt, populatque ingentem farris aceruum curculio atque inopi metuens formica senectae. Lost Grain: '
+  },
+  {
+    type: 'STAT-CHANGE',
+    notification: 'negative',
+    stat: 'oxen',
+	blar: 'gar',
+    value: -1,
+    text: 'proluit insano contorquens uertice siluas fluuiorum rex Eridanus camposque per omnis cum stabulis armenta tulit. Casualties: '
+  },
+  {
+    type: 'STAT-CHANGE',
+    notification: 'negative',
+    stat: 'bees',
+	blar: 'gar',
+    value: -1,
+    text: 'Absint et picti squalentia terga lacerti pinguibus a stabulis meropesque aliaeque volucres et manibus Procne pectus signata cruentis; omnia nam late vastant ipsasque volantes ore ferunt dulcem nidis immitibus escam. Casualties: '
+  },
+  {
+    type: 'STAT-CHANGE',
+    notification: 'negative',
+    stat: 'wine',
+	blar: 'gar',
+    value: -5,
+    text: 'nam saepe incautis pastoribus excidit ignis, qui furtim pingui primum sub cortice tectus robora comprendit, frondesque elapsus in altas ingentem caelo sonitum dedit. Wine lost:'
+  },
+  {
+    type: 'STAT-CHANGE',
+    notification: 'negative',
+    stat: 'honey',
+	blar: 'gar',
+    value: -1,
+    text: 'nam saepe favos ignotus adedit stellio et lucifugis congesta cubilia blattis immunisque sedens aliena ad pabula fucus. Honey lost: '
+  },
+  {
+    type: 'STAT-CHANGE',
+    notification: 'positive',
+    stat: 'grain',
+	blar: 'crops',
+    value: 20,
+    text: 'illa seges demum uotis respondet auari agricolae, bis quae solem, bis frigora sensit; illius immensae ruperunt horrea messes. Grain added: '
+  },
+  {
+    type: 'STAT-CHANGE',
+    notification: 'positive',
+    stat: 'honey',
+	blar: 'sweetums',
+    value: 1,
+    text: 'Siquando sedem angustam servataque mella thesauris relines, prius haustu sparsus aquarum ora fove fumosque manu praetende sequaces. Honey added: '
+  },
+  {
+    type: 'STAT-CHANGE',
+    notification: 'positive',
+    stat: 'bees',
+	blar: 'gar',
+    value: 5,
+    text: 'cum prima novi ducent examina reges vere suo ludetque favis emissa iuventus, vicina invitet decedere ripa calori, obviaque hospitiis teneat frondentibus arbos. Bees added: '
+  },
+  {
+    type: 'STAT-CHANGE',
+    notification: 'positive',
+    stat: 'oxen',
+	blar: 'gar',
+    value: 1,
+    text: 'Found wild oxen. New oxen: '
+  }
+];
+
+OregonH.Event.generateEvent = function(){
+  //pick random one
+  var eventIndex = Math.floor(Math.random() * this.eventTypes.length);
+  var eventData = this.eventTypes[eventIndex];
+
+  //events that consist in updating a stat
+  if(eventData.type == 'STAT-CHANGE') {
+    this.stateChangeEvent(eventData);
+  }
+  //shops
+  else if(eventData.type == 'SHOP') {
+    //pause game
+    this.game.pauseJourney();
+
+    //notify user
+    this.ui.notify(eventData.text, eventData.notification);
+
+    //prepare event
+    this.shopEvent(eventData);
+  }
+    //attacks
+  else if(eventData.type == 'ATTACK') {
+    //pause game
+    this.game.pauseJourney();
+
+    //notify user
+    this.ui.notify(eventData.text, eventData.notification);
+
+    //prepare event
+    this.attackEvent(eventData);
+  }
+  
+}
+
+OregonH.Event.stateChangeEvent = function(eventData) {
+  //can't have negative quantities and multiplication
+   if((eventData.blar == 'crops') && (eventData.value + this.caravan[eventData.stat] >= 0)) {
+    this.caravan[eventData.stat] += (20 * this.caravan['oxen']);
+    this.ui.notify(eventData.text + Math.abs(20 * this.caravan['oxen']), eventData.notification)
+  }
+ if((eventData.blar == 'gar') && (eventData.value + this.caravan[eventData.stat] >= 0)) {
+    this.caravan[eventData.stat] += eventData.value;
+    this.ui.notify(eventData.text + Math.abs(eventData.value), eventData.notification)
+  }
+    if((eventData.blar == 'sweetums') && (eventData.value + this.caravan[eventData.stat] >= 0)) {
+    this.caravan[eventData.stat] += (this.caravan['bees']);
+    this.ui.notify(eventData.text + Math.abs(this.caravan['bees']), eventData.notification)
+  }
+
+
+};
+OregonH.Event.shopEvent = function(eventData) {
+  //number of products for sale
+  var numProds = 4;
+
+  //product list
+  var products = [];
+  var j, priceFactor;
+
+  for(var i = 0; i < numProds; i++) {
+    //random product
+    j = i;
+
+    //multiply price by honey factor
+    priceFactor = (Math.floor((this.caravan['honey'])/3)+1);
+
+    products.push({
+      item: eventData.products[j].item,
+      qty: eventData.products[j].qty,
+      price: Math.round(eventData.products[j].price * priceFactor)
+    });
+  }
+
+  this.ui.showShop(products);
+};
+//prepare an attack event
+OregonH.Event.attackEvent = function(eventData){
+  var firepower = Math.round((0.7 + 0.6 * Math.random()) * OregonH.ENEMY_FIREPOWER_AVG);
+  var gold = Math.round((0.7 + 0.6 * Math.random()) * OregonH.ENEMY_GOLD_AVG);
+
+  this.ui.showAttack(firepower, gold);
+};
