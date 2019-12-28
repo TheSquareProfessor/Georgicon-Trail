@@ -9,6 +9,7 @@ body {
   height: 100%;
   overflow: hidden;
   font-family: Courier;
+  background-color: #5F9FFF;
 }
 
 .hidden {
@@ -21,7 +22,6 @@ body {
 
 #journey {
   height: 100%;
-  background-color: #5F9FFF;
 }
 
 #event {
